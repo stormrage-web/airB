@@ -29,5 +29,18 @@
     border: 1px solid var(--blue-3);
     border-radius: 4px;
     cursor: pointer;
+
+    &:visited {
+      color: var(--blue-3);
+    }
+    &:link {
+      color: var(--blue-3);
+    }
+    &:active {
+      color: var(--blue-3);
+    }
+    &:hover {
+      color: var(--blue-3);
+    }
   }
 }
