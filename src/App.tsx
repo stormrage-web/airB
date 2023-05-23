@@ -1,37 +1,25 @@
-import React, { useState } from "react";
-import cx from "classnames";
-import "./App.scss";
-import { CustomSelect } from "./widgets/CustomSelect/CustomSelect";
-import { Option } from "./widgets/CustomSelect/CustomOption/CustomOption";
+import React from "react";
+import styles from "./App.module.scss";
 import CustomCheckbox from "./widgets/CustomCheckbox/CustomCheckbox";
+import MainTab from "./pages/MainTab/MainTab";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import FlightTab from "./pages/FlightTab/FlightTab";
 
-const optionsList: Option[] = [
-	{
-		value: "0",
-		title: "option 0",
-	},
-	{
-		value: "1",
-		title: "option 1",
-	},
-	{
-		value: "2",
-		title: "option 2",
-	},
-];
-
-function App() {
-	const [selectValue, setSelectedValue] = useState("");
-	const handleValueSelect = (value: string) => setSelectedValue(value);
-
-	const selectedValue = optionsList.find((item) => item.value === selectValue) || null;
-
+const App = () => {
 	return (
-		<div className={cx()}>
-			<CustomSelect selected={selectedValue} options={optionsList} onChange={handleValueSelect}/>
+		<div className={styles.wrapper}>
+			<div className={styles.tabsBlock}>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/main" element={<MainTab />} />
+						<Route path="/flight/*" element={<FlightTab />} />
+						<Route path="*" element={<Navigate to="/main" />} />
+					</Routes>
+				</BrowserRouter>
+			</div>
 			<CustomCheckbox>asd</CustomCheckbox>
 		</div>
 	);
-}
+};
 
 export default App;
