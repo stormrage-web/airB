@@ -29,9 +29,13 @@
 }
 
 .filters {
-  width: 400px;
+  display: flex;
   margin-top: 20px;
   margin-bottom: 46px;
+
+  &>div {
+    width: 30%;
+  }
 
   &__selectTitle {
     font-size: 18px;
@@ -46,34 +50,6 @@
 
   &>:first-child {
     margin-right: 20px;
-  }
-
-  &__item {
-    position: relative;
-    width: inherit!important;
-
-    &:before {
-      display: inline-block;
-      position: absolute;
-      top: 6px;
-      right: 0;
-      z-index: 10;
-      padding: 0 14px 0 0;
-      content: "";
-      height: 32px;
-      width: 32px;
-      background: url("../../shared/images/calendar.svg") no-repeat;
-    }
-  }
-
-  &__input {
-    position: relative;
-    height: 48px;
-    border-radius: 4px;
-    padding: 12px 14px;
-    outline: none;
-    border: none;
-    background-color: var(--gray-1);
   }
 }
 
