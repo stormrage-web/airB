@@ -3,7 +3,7 @@
 .selectWrapper {
   position: relative;
   border-radius: 4px;
-  height: 60px;
+  height: 48px;
 
   &[data-is-active="true"] .arrow {
     transform: rotate(180deg);
@@ -27,7 +27,7 @@
   justify-content: flex-start;
   align-items: center;
   height: 100%;
-  padding: 20px;
+  padding: 16px;
   cursor: pointer;
   color: var(--gray-2);
   background: var(--gray-1);
