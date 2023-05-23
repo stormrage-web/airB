@@ -4,16 +4,12 @@ import cx from "classnames";
 import { NavLink } from "react-router-dom";
 import { CustomSelect } from "../../widgets/CustomSelect/CustomSelect";
 import { Option } from "../../widgets/CustomSelect/CustomOption/CustomOption";
-import { BarChart, Tooltip, YAxis, XAxis, CartesianGrid, Bar } from "recharts";
-import DatePicker from "react-datepicker";
+import { BarChart, Tooltip, YAxis, XAxis, CartesianGrid, Bar, Brush } from "recharts";
 import "react-datepicker/dist/react-datepicker.css";
+import { graph1 } from "../../shared/mocks/graph1";
+import CustomDatepicker from "../../widgets/CustomDatepicker/CustomDatepicker";
 
-const data = [
-	{ name: "10.01.2019", count: 400 },
-	{ name: "11.01.2019", count: 500 },
-	{ name: "12.01.2019", count: 600 },
-	{ name: "13.01.2019", count: 400 },
-];
+const data = graph1;
 
 const classes: Option[] = [
 	{
@@ -36,17 +32,9 @@ const FlightTab = () => {
 	const selectedValue =
 		classes.find((item) => item.value === selectedClass) || null;
 
+	const [flightDate, setFlightDate] = useState<Date | null>(new Date());
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
-	const ReactDatePickerInput = React.forwardRef<
-		HTMLInputElement,
-		React.DetailedHTMLProps<
-			React.InputHTMLAttributes<HTMLInputElement>,
-			HTMLInputElement
-		>
-	>((props, ref) => <input ref={ref} {...props} />);
-
-	ReactDatePickerInput.displayName = "ReactDatePickerInput";
 
 	return (
 		<div className={styles.tabWrapper}>
@@ -72,36 +60,46 @@ const FlightTab = () => {
 					</h2>
 				</div>
 				<div className={styles.filters}>
-					<p className={styles.filters__selectTitle}>
+					<div>
+						<p className={styles.filters__selectTitle}>
+							Дата бронирования
+						</p>
+						<CustomDatepicker
+							date={flightDate}
+							setDate={setFlightDate}
+						/>
+					</div>
+					<div>
+						<p className={styles.filters__selectTitle}>
 						Класс бронирования
-					</p>
-					<CustomSelect
-						selected={selectedValue}
-						options={classes}
-						onChange={(e) => setSelectedClass(e)}
-					/>
+						</p>
+						<CustomSelect
+							selected={selectedValue}
+							options={classes}
+							onChange={(e) => setSelectedClass(e)}
+						/>
+					</div>
 				</div>
-				<BarChart width={600} height={300} data={data}>
-					<XAxis dataKey="name" stroke="#8884d8" />
+				<BarChart width={750} height={300} data={data}>
+					<XAxis dataKey="date" stroke="#4082F4" />
 					<YAxis />
 					<Tooltip
 						wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
 					/>
 					<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-					<Bar dataKey="count" fill="#8884d8" barSize={30} />
+					<Bar dataKey="value" fill="#4082F4" barSize={30} />
+					<Brush dataKey="date" height={40} stroke="#4082F4" />
 				</BarChart>
 				<div className={styles.dates}>
-					<DatePicker
-						selected={startDate}
-						customInput={<ReactDatePickerInput className={styles.dates__input} />}
-						onChange={(date: Date | null) => setStartDate(date)}
-						wrapperClassName={styles.dates__item}
+					<CustomDatepicker
+						date={startDate}
+						setDate={setStartDate}
+						maxDate={endDate}
 					/>
-					<DatePicker
-						selected={endDate}
-						customInput={<ReactDatePickerInput className={styles.dates__input} />}
-						onChange={(date: Date | null) => setEndDate(date)}
-						wrapperClassName={styles.dates__item}
+					<CustomDatepicker
+						date={endDate}
+						setDate={setEndDate}
+						minDate={startDate}
 					/>
 				</div>
 			</div>
