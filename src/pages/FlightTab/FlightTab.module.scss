@@ -36,6 +36,10 @@
   &>:first-child {
     margin-right: 20px;
   }
+
+  &>* {
+    width: 50%;
+  }
 }
 
 .breadcrumbs {

@@ -3,15 +3,14 @@
 
 .wrapper {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 15vh 10vw 5vh 10vw;
   background-color: var(--blue-3);
 }
 
 .tabsBlock {
-  position: absolute;
   left: 10vw;
   top: 100px;
-  width: 80vw;
-  min-height: 80vh;
+  width: 100%;
   background-color: var(--snowy);
 }
