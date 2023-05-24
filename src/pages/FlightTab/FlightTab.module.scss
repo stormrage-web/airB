@@ -28,21 +28,6 @@
   }
 }
 
-.filters {
-  display: flex;
-  margin-top: 20px;
-  margin-bottom: 46px;
-
-  &>div {
-    width: 30%;
-  }
-
-  &__selectTitle {
-    font-size: 18px;
-    line-height: 20px;
-    margin-bottom: 7px;
-  }
-}
 
 .dates {
   display: flex;
@@ -50,6 +35,26 @@
 
   &>:first-child {
     margin-right: 20px;
+  }
+}
+
+.breadcrumbs {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  color: var(--snowy);
+
+  &:visited {
+    color: var(--snowy);
+  }
+  &:link {
+    color: var(--snowy);
+  }
+  &:active {
+    color: var(--snowy);
+  }
+  &:hover {
+    color: var(--snowy);
   }
 }
 

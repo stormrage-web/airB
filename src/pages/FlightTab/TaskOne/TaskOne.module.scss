@@ -1,0 +1,15 @@
+.filters {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 46px;
+
+  &>div {
+    width: 30%;
+  }
+
+  &__selectTitle {
+    font-size: 18px;
+    line-height: 20px;
+    margin-bottom: 7px;
+  }
+}
