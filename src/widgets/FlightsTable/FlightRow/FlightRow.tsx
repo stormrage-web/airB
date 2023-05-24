@@ -13,7 +13,7 @@ const FlightRow = ({ time, title, id }: FlightRowProps) => {
 		<tr className={styles.wrapper}>
 			<td>{time}</td>
 			<td>{title}</td>
-			<td className={styles.buttonCell}><NavLink to={"/flight/" + id + "/task-1"} className={styles.buttonCell__input}>Посмотреть</NavLink></td>
+			<td className={styles.buttonCell}><NavLink to={"/flight/" + id} className={styles.buttonCell__input}>Посмотреть</NavLink></td>
 		</tr>
 	);
 };

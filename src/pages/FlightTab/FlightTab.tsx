@@ -1,43 +1,26 @@
 import React, { useState } from "react";
 import styles from "./FlightTab.module.scss";
 import cx from "classnames";
-import { NavLink } from "react-router-dom";
-import { CustomSelect } from "../../widgets/CustomSelect/CustomSelect";
-import { Option } from "../../widgets/CustomSelect/CustomOption/CustomOption";
-import { BarChart, Tooltip, YAxis, XAxis, CartesianGrid, Bar, Brush } from "recharts";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import { graph1 } from "../../shared/mocks/graph1";
 import CustomDatepicker from "../../widgets/CustomDatepicker/CustomDatepicker";
+import TaskOne from "./TaskOne/TaskOne";
+import TaskTwo from "./TaskTwo/TaskTwo";
 
-const data = graph1;
 
-const classes: Option[] = [
-	{
-		value: "0",
-		title: "Эконом",
-	},
-	{
-		value: "1",
-		title: "Бизнес",
-	},
-];
 
 const FlightTab = () => {
-	const [selectedClass, setSelectedClass] = useState<string | null>(null);
 	const tabStyles = ({ isActive }: { isActive: boolean }) =>
 		isActive
 			? cx(styles.navigation__tab, styles.navigation__tab_active)
 			: styles.navigation__tab;
 
-	const selectedValue =
-		classes.find((item) => item.value === selectedClass) || null;
-
-	const [flightDate, setFlightDate] = useState<Date | null>(new Date());
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
 
 	return (
 		<div className={styles.tabWrapper}>
+			<NavLink to="/" className={styles.breadcrumbs}>{"< Главная"}</NavLink>
 			<nav className={styles.navigation}>
 				<NavLink to="task-1" className={tabStyles}>
 					Динамика бронирования
@@ -59,37 +42,13 @@ const FlightTab = () => {
 						Москва - Сочи
 					</h2>
 				</div>
-				<div className={styles.filters}>
-					<div>
-						<p className={styles.filters__selectTitle}>
-							Дата бронирования
-						</p>
-						<CustomDatepicker
-							date={flightDate}
-							setDate={setFlightDate}
-						/>
-					</div>
-					<div>
-						<p className={styles.filters__selectTitle}>
-						Класс бронирования
-						</p>
-						<CustomSelect
-							selected={selectedValue}
-							options={classes}
-							onChange={(e) => setSelectedClass(e)}
-						/>
-					</div>
-				</div>
-				<BarChart width={750} height={300} data={data}>
-					<XAxis dataKey="date" stroke="#4082F4" />
-					<YAxis />
-					<Tooltip
-						wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
-					/>
-					<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-					<Bar dataKey="value" fill="#4082F4" barSize={30} />
-					<Brush dataKey="date" height={40} stroke="#4082F4" />
-				</BarChart>
+				<Routes>
+					<Route path="/task-1" element={<TaskOne/>}/>
+					<Route path="/task-2" element={<TaskTwo/>}/>
+					<Route path="/task-3" element={<TaskOne/>}/>
+					<Route path="/task-4" element={<TaskOne/>}/>
+					<Route path="*" element={<Navigate to="task-1"/>}/>
+				</Routes>
 				<div className={styles.dates}>
 					<CustomDatepicker
 						date={startDate}
