@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { graph1 } from "../../../shared/mocks/graph1";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
+import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
 
 const data = graph1;
 
@@ -36,6 +37,9 @@ const TaskOne = () => {
 
 	const [flightDate, setFlightDate] = useState<Date | null>(new Date());
 
+	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
+	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
+
 	return (
 		<>
 			<div className={styles.filters}>
@@ -56,6 +60,15 @@ const TaskOne = () => {
 						selected={selectedValue}
 						options={classes}
 						onChange={(e) => setSelectedClass(e)}
+					/>
+				</div>
+				<div>
+					<p className={styles.filters__selectTitle}>Вид графика</p>
+					<ToggleSwitch
+						leftLabel={"Динамика\xa0бронирования"}
+						rightLabel={"Динамика\xa0роста"}
+						leftActive={isSeasonTypeActive}
+						onChange={handleTypeChange}
 					/>
 				</div>
 			</div>

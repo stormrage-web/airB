@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import { graph2 } from "../../../shared/mocks/graph2";
+import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
 
 const classes: Option[] = [
 	{
@@ -29,8 +30,11 @@ const data = graph2;
 
 const TaskTwo = () => {
 	const [selectedClass, setSelectedClass] = useState<string | null>(null);
+	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
 	const selectedValue =
 		classes.find((item) => item.value === selectedClass) || null;
+
+	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
 
 	return (
 		<div>
@@ -46,9 +50,13 @@ const TaskTwo = () => {
 					/>
 				</div>
 				<div>
-					<p className={styles.filters__selectTitle}>
-						Вид графика
-					</p>
+					<p className={styles.filters__selectTitle}>Вид графика</p>
+					<ToggleSwitch
+						leftLabel={"Сезонность\xa0спроса"}
+						rightLabel={"Изменение\xa0бронирования"}
+						leftActive={isSeasonTypeActive}
+						onChange={handleTypeChange}
+					/>
 				</div>
 			</div>
 			<ResponsiveContainer width="100%" height={300}>
