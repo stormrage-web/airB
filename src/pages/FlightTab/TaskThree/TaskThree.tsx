@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import styles from "./TaskTwo.module.scss";
+import styles from "./TaskThree.module.scss";
 import { CustomSelect } from "../../../widgets/CustomSelect/CustomSelect";
 import {
 	Area,
 	AreaChart,
 	Brush,
+	Line,
+	LineChart,
 	ReferenceArea,
 	ResponsiveContainer,
 	Tooltip,
@@ -13,7 +15,7 @@ import {
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import { graph2 } from "../../../shared/mocks/graph2";
-import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
+import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
 
 const classes: Option[] = [
 	{
@@ -28,13 +30,10 @@ const classes: Option[] = [
 
 const data = graph2;
 
-const TaskTwo = () => {
+const TaskThree = () => {
 	const [selectedClass, setSelectedClass] = useState<string | null>(null);
-	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
 	const selectedValue =
 		classes.find((item) => item.value === selectedClass) || null;
-
-	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
 
 	return (
 		<div>
@@ -50,17 +49,17 @@ const TaskTwo = () => {
 					/>
 				</div>
 				<div>
-					<p className={styles.filters__selectTitle}>Вид графика</p>
-					<ToggleSwitch
-						leftLabel={"Сезонность\xa0спроса"}
-						rightLabel={"Изменение\xa0бронирования"}
-						leftActive={isSeasonTypeActive}
-						onChange={handleTypeChange}
-					/>
+					<p className={styles.filters__selectTitle}>Профили спроса</p>
+					<div className={styles.filters__checkboxesWrapper}>
+						<CustomCheckbox>Бизнес</CustomCheckbox>
+						<CustomCheckbox>Отдых</CustomCheckbox>
+						<CustomCheckbox>Профиль</CustomCheckbox>
+						<CustomCheckbox>Профиль</CustomCheckbox>
+					</div>
 				</div>
 			</div>
 			<ResponsiveContainer width="100%" height={300}>
-				<AreaChart data={data}>
+				<LineChart data={data}>
 					<XAxis dataKey="date" stroke="#4082F4" />
 					<YAxis dataKey="value" />
 					<ReferenceArea
@@ -82,13 +81,11 @@ const TaskTwo = () => {
 						label="zone 2"
 					/>
 					<Tooltip />
-					<Area
+					<Line
 						type="monotone"
 						dataKey="value"
 						stroke="#4082F4"
-						fill="#4082F4"
-						fillOpacity={0.5}
-						activeDot={{ r: 8 }}
+						activeDot={{ r: 5 }}
 					/>
 					<Brush dataKey="date" height={40} stroke="#4082F4">
 						<AreaChart data={data}>
@@ -98,14 +95,13 @@ const TaskTwo = () => {
 								fill="#CADFF5"
 								fillOpacity={1}
 								strokeOpacity={0}
-								activeDot={{ r: 8 }}
 							/>
 						</AreaChart>
 					</Brush>
-				</AreaChart>
+				</LineChart>
 			</ResponsiveContainer>
 		</div>
 	);
 };
 
-export default TaskTwo;
+export default TaskThree;

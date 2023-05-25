@@ -5,7 +5,7 @@ const CustomCheckbox: React.FC<{ children: string }> = ({ children }) => {
 	const [active, setActive] = useState(false);
 
 	return (
-		<div onClick={() => setActive(!active)}>
+		<div onClick={() => setActive(!active)} className={styles.wrapper}>
 			<input
 				checked={active}
 				type="checkbox"
