@@ -12,7 +12,7 @@ const App = () => {
 			<div className={styles.tabsBlock}>
 				<BrowserRouter>
 					<Routes>
-						<Route path="/main" element={<MainTab />} />
+						<Route path="/" element={<MainTab />} />
 						<Route path="/flight/" element={<FlightsWrapper />}>
 							{flights.map((flight) => (
 								<Route
@@ -22,7 +22,7 @@ const App = () => {
 								/>
 							))}
 						</Route>
-						<Route path="*" element={<Navigate to="/main" />} />
+						<Route path="*" element={<Navigate to="/" />} />
 					</Routes>
 				</BrowserRouter>
 			</div>
