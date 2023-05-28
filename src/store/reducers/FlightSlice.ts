@@ -32,7 +32,7 @@ interface Seasons {
 
 export interface TabOneData {
 	data: Coordinates[];
-	seasons: Seasons;
+	seasons: Seasons[];
 }
 
 export interface FlightState {

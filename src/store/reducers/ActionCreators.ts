@@ -45,49 +45,46 @@ export const fetchFlight =
 						.join("")
 					: "";
 				const plot_type_param =
-					data.tabParams?.type === 0
+				tab === 2
+					? "&plot_type_param=season_spros"
+					: data.tabParams?.type === 0
 						? "&plot_type_param=dynamic"
-						: data.tabParams?.type === 1
-							? "&plot_type_param=season_spros"
-							: "";
-				const response = await axios.get<Coordinates[] | TabOneData>(
+						: "";
+				const response = await axios.get<Coordinates[] | TabOneData | any>(
 					mainEndPoint +
-						"flight_task_" +
-						tab +
-						flight_id_param +
-						flight_date_param +
-						booking_class_param +
-						plot_type_param +
-						profiles_param,
+					"flight_task_" +
+					tab +
+					flight_id_param +
+					flight_date_param +
+					booking_class_param +
+					plot_type_param +
+					profiles_param,
 				);
-				// if (tab == 2) {
-				// 	const responseSeasons = (response.data as TabOneData).seasons || {};
-				// 	const iteratedSeasons = [];
-				// 	for (const key of Object.keys(responseSeasons)) {
-				// 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// 	// @ts-ignore
-				// 		iteratedSeasons.push({
-				// 			name: key,
-				// 			left: responseSeasons[key]?.left,
-				// 			right: responseSeasons[key]?.right,
-				// 		});
-				// 	}
-
-				// 	dispatch(
-				// 		flightSlice.actions.flightFetchingSuccess({
-				// 			flight: data.flight,
-				// 			tabInfo: response.data,
-				// 			tabParams: data.tabParams,
-				// 		}),
-				// 	);
-				// } else
-				dispatch(
-					flightSlice.actions.flightFetchingSuccess({
-						flight: data.flight,
-						tabInfo: response.data,
-						tabParams: data.tabParams,
-					}),
-				);
+				if (tab == 2) {
+					const responseSeasons = response.data.seasons;
+					const iteratedSeasons = [];
+					for (const key of Object.keys(responseSeasons)) {
+						iteratedSeasons.push({
+							name: key,
+							left: responseSeasons[key]?.left,
+							right: responseSeasons[key]?.right,
+						});
+					}
+					dispatch(
+						flightSlice.actions.flightFetchingSuccess({
+							flight: data.flight,
+							tabInfo: { ...response.data, seasons: iteratedSeasons },
+							tabParams: data.tabParams,
+						}),
+					);
+				} else
+					dispatch(
+						flightSlice.actions.flightFetchingSuccess({
+							flight: data.flight,
+							tabInfo: response.data,
+							tabParams: data.tabParams,
+						}),
+					);
 			} catch (e) {
 				console.log(e);
 			}
