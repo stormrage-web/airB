@@ -4,9 +4,10 @@
   margin-bottom: 46px;
 
   &>div {
-    width: 40%;
+    width: 50%;
 
     &:not(:last-child) {
+      width: 30%;
       margin-right: 20px;
     }
   }
@@ -20,6 +21,7 @@
 
   &__checkboxesWrapper {
     display: grid;
+    width: 100%;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
   }
