@@ -1,28 +1,67 @@
-interface Flight {
-	id: number;
+export interface Flight {
 	time: string;
 	title: string;
+	direction: string;
+	classes: string[];
 }
 
-export const flights: Flight[] = [
+export const flightsMock: Flight[] = [
 	{
-		id: 0,
-		title: "SU 0019",
+		title: "1125",
 		time: "11:11",
+		direction: "Moscow-Sochi",
+		classes: [
+			"B",
+			"C",
+			"D",
+			"E",
+			"G",
+			"H",
+			"I",
+			"J",
+			"K",
+			"L",
+			"M",
+			"N",
+			"O",
+			"P",
+			"Q",
+			"R",
+			"T",
+			"U",
+			"V",
+			"X",
+			"Y",
+			"Z",
+		],
 	},
 	{
-		id: 1,
-		title: "SU 0019",
-		time: "11:11",
-	},
-	{
-		id: 2,
-		title: "SU 0019",
-		time: "11:11",
-	},
-	{
-		id: 3,
-		title: "SU 0019",
-		time: "11:11",
+		title: "1121",
+		time: "11:20",
+		direction: "Moscow-Sochi",
+		classes: [
+			"B",
+			"C",
+			"D",
+			"E",
+			"G",
+			"H",
+			"I",
+			"J",
+			"K",
+			"L",
+			"M",
+			"N",
+			"O",
+			"P",
+			"Q",
+			"R",
+			"T",
+			"U",
+			"V",
+			"X",
+			"Y",
+			"Z",
+		],
 	},
 ];
