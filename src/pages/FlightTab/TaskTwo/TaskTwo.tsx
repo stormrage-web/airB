@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TaskTwo.module.scss";
 import { CustomSelect } from "../../../widgets/CustomSelect/CustomSelect";
 import {
@@ -12,29 +12,43 @@ import {
 	YAxis,
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
-import { graph2 } from "../../../shared/mocks/graph2";
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
+import axios from "axios";
 
-const classes: Option[] = [
-	{
-		value: "0",
-		title: "Эконом",
-	},
-	{
-		value: "1",
-		title: "Бизнес",
-	},
-];
+interface TaskTwoProps {
+	classes: Option[];
+	flight: string;
+}
 
-const data = graph2;
-
-const TaskTwo = () => {
+const TaskTwo = ({classes, flight}: TaskTwoProps) => {
+	const [seasons, setSeasons] = useState<any[]>([]);
+	const [data, setData] = useState([]);
 	const [selectedClass, setSelectedClass] = useState<string | null>(null);
 	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
 	const selectedValue =
 		classes.find((item) => item.value === selectedClass) || null;
 
 	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
+
+	useEffect(() => {
+		axios
+			.get(
+				"http://91.227.18.29:5000/flight_task_2?flight_id_param=1125&flight_date_param=04.03.2019&booking_class_param=J&plot_type_param=dynamic",
+			)
+			.then((response) => {
+				setData(response.data?.data);
+				const responseSeasons = response.data?.seasons;
+				const iteratedSeasons = [];
+				for (const key of Object.keys(responseSeasons)) {
+					iteratedSeasons.push({
+						name: key,
+						startIndex: responseSeasons[key]?.left,
+						endIndex: responseSeasons[key]?.right,
+					});
+				}
+				setSeasons(iteratedSeasons);
+			});
+	}, []);
 
 	return (
 		<div>
@@ -61,30 +75,24 @@ const TaskTwo = () => {
 			</div>
 			<ResponsiveContainer width="100%" height={300}>
 				<AreaChart data={data}>
-					<XAxis dataKey="date" stroke="#4082F4" />
-					<YAxis dataKey="value" />
-					<ReferenceArea
-						x1={"07.06.2018"}
-						x2={"24.07.2018"}
-						y1={0}
-						y2={45}
-						fill="#000"
-						fillOpacity={0.3}
-						label="zone 1"
-					/>
-					<ReferenceArea
-						x1={"24.07.2018"}
-						x2={"24.09.2018"}
-						y1={0}
-						y2={30}
-						fill="#421"
-						fillOpacity={0.3}
-						label="zone 2"
-					/>
+					<XAxis dataKey="x" stroke="#4082F4" />
+					<YAxis dataKey="y" />
+					{seasons.map((season) => (
+						<ReferenceArea
+							key={season.name}
+							x1={season.startIndex}
+							x2={season.endIndex}
+							y1={0}
+							y2={45}
+							fill={Math.floor(Math.random()*16777215).toString(16)}
+							fillOpacity={0.8}
+							label={season.name}
+						/>
+					))}
 					<Tooltip />
 					<Area
 						type="monotone"
-						dataKey="value"
+						dataKey="y"
 						stroke="#4082F4"
 						fill="#4082F4"
 						fillOpacity={0.5}
@@ -94,7 +102,7 @@ const TaskTwo = () => {
 						<AreaChart data={data}>
 							<Area
 								type="monotone"
-								dataKey="value"
+								dataKey="y"
 								fill="#CADFF5"
 								fillOpacity={1}
 								strokeOpacity={0}
