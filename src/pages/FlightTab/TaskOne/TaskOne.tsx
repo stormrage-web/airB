@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TaskOne.module.scss";
 import CustomDatepicker from "../../../widgets/CustomDatepicker/CustomDatepicker";
 import { CustomSelect } from "../../../widgets/CustomSelect/CustomSelect";
@@ -8,37 +8,82 @@ import {
 	Bar,
 	BarChart,
 	Brush,
-	CartesianGrid, ResponsiveContainer,
+	CartesianGrid,
+	ResponsiveContainer,
 	Tooltip,
 	XAxis,
-	YAxis
+	YAxis,
 } from "recharts";
-import { graph1 } from "../../../shared/mocks/graph1";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
+import { useAppSelector } from "../../../hooks/redux";
+import { useTabsLogic } from "../../../hooks/useFlight.logic";
 
-const data = graph1;
+interface TaskOneProps {
+	classes: Option[];
+	flight: string;
+}
 
-const classes: Option[] = [
-	{
-		value: "0",
-		title: "Эконом",
-	},
-	{
-		value: "1",
-		title: "Бизнес",
-	},
-];
+const formatDate = (x: string) => {
+	const arr = x.split(".");
+	return arr[2] + "-" + arr[1] + "-" + arr[0];
+};
 
-const TaskOne = () => {
-	const [selectedClass, setSelectedClass] = useState<string | null>(null);
-	const selectedValue =
-		classes.find((item) => item.value === selectedClass) || null;
+const formatDateToString = (x: Date | null) => {
+	if (x) {
+		const arr = x.toISOString().split("-");
+		console.log(arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0]);
+		return arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0];
+	}
 
-	const [flightDate, setFlightDate] = useState<Date | null>(new Date());
+	return null;
+};
+
+const TaskOne = ({ classes, flight }: TaskOneProps) => {
+	const { fetchFlightHandler } = useTabsLogic();
+	const { tabInfo, tabParams } = useAppSelector(
+		(state) => state.flightReducer,
+	);
 
 	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
 	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
+
+	useEffect(() => {
+		console.log(flight);
+		fetchFlightHandler({
+			tab: 1,
+			data: {
+				flight: flight,
+				tabParams: { date: "04.03.2019", class: classes[0].title, type: 0 },
+			},
+		});
+	}, []);
+
+	const handleChangeDate = (x: Date | null) => {
+		fetchFlightHandler({
+			tab: 1,
+			data: {
+				flight: flight,
+				tabParams: {
+					...tabParams,
+					date: formatDateToString(x) || undefined,
+				},
+			},
+		});
+	};
+
+	const handleChangeClass = (x: string) => {
+		fetchFlightHandler({
+			tab: 1,
+			data: {
+				flight: flight,
+				tabParams: {
+					...tabParams,
+					class: x,
+				},
+			},
+		});
+	};
 
 	return (
 		<>
@@ -48,8 +93,10 @@ const TaskOne = () => {
 						Дата бронирования
 					</p>
 					<CustomDatepicker
-						date={flightDate}
-						setDate={setFlightDate}
+						date={
+							new Date(formatDate(tabParams.date || "04.03.2019"))
+						}
+						setDate={handleChangeDate}
 					/>
 				</div>
 				<div>
@@ -57,9 +104,9 @@ const TaskOne = () => {
 						Класс бронирования
 					</p>
 					<CustomSelect
-						selected={selectedValue}
+						selected={classes.find(item => item.title === tabParams.class) || null}
 						options={classes}
-						onChange={(e) => setSelectedClass(e)}
+						onChange={(e) => handleChangeClass(classes.find(item => item.value === e)?.title || "")}
 					/>
 				</div>
 				<div>
@@ -72,29 +119,38 @@ const TaskOne = () => {
 					/>
 				</div>
 			</div>
-			<ResponsiveContainer width="100%" height={300}>
-				<BarChart data={data}>
-					<XAxis dataKey="date" stroke="#4082F4" />
-					<YAxis />
-					<Tooltip
-						wrapperStyle={{ width: 100, backgroundColor: "#ccc" }}
-					/>
-					<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-					<Bar dataKey="value" fill="#4082F4" barSize={30} />
-					<Brush dataKey="date" height={40}>
-						<AreaChart data={data}>
-							<Area
-								type="monotone"
-								dataKey="value"
-								fill="#CADFF5"
-								fillOpacity={1}
-								strokeOpacity={0}
-								activeDot={{ r: 8 }}
-							/>
-						</AreaChart>
-					</Brush>
-				</BarChart>
-			</ResponsiveContainer>
+			{!(tabInfo as any[]).length ? (
+				<div className={styles.noData}>
+					Нет данных для рейса с заданными параметрами
+				</div>
+			) : (
+				<ResponsiveContainer width="100%" height={300}>
+					<BarChart data={(tabInfo as any[]) || []}>
+						<XAxis dataKey="x" stroke="#4082F4" />
+						<YAxis />
+						<Tooltip
+							wrapperStyle={{
+								width: 100,
+								backgroundColor: "#ccc",
+							}}
+						/>
+						<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+						<Bar dataKey="y" fill="#4082F4" barSize={30} />
+						<Brush dataKey="x" height={40}>
+							<AreaChart data={(tabInfo as any[]) || []}>
+								<Area
+									type="monotone"
+									dataKey="y"
+									fill="#CADFF5"
+									fillOpacity={1}
+									strokeOpacity={0}
+									activeDot={{ r: 8 }}
+								/>
+							</AreaChart>
+						</Brush>
+					</BarChart>
+				</ResponsiveContainer>
+			)}
 		</>
 	);
 };
