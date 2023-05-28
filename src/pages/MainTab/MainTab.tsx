@@ -4,27 +4,32 @@ import { CustomSelect } from "../../widgets/CustomSelect/CustomSelect";
 import { Option } from "../../widgets/CustomSelect/CustomOption/CustomOption";
 import { CustomInput } from "../../widgets/CustomInput/CustomInput";
 import FlightsTable from "../../widgets/FlightsTable/FlightsTable";
+import { Flight } from "../../shared/mocks/flights";
 
 const optionsList: Option[] = [
 	{
 		value: "0",
-		title: "Москва – Сочи",
+		title: "AER  - SVO ",
 	},
 	{
 		value: "1",
-		title: "Сочи – Москва",
+		title: "SVO  - ASF ",
 	},
 	{
 		value: "3",
-		title: "Москва – Астрахань",
+		title: "SVO  - AER ",
 	},
 	{
 		value: "4",
-		title: "Астрахань – Москва",
+		title: "ASF  - SVO ",
 	},
 ];
 
-const MainTab = () => {
+interface MainTabProps {
+	flights: Flight[];
+}
+
+const MainTab = ({flights}: MainTabProps) => {
 	const [selectValue, setSelectedValue] = useState("");
 	const [searchValue, setSearchValue] = useState("");
 	const handleValueSelect = (value: string) => setSelectedValue(value);
@@ -43,7 +48,7 @@ const MainTab = () => {
 				/>
 				<CustomInput value={searchValue} onChange={setSearchValue} placeholder="Поиск по рейсу"/>
 			</div>
-			<FlightsTable/>
+			<FlightsTable search={searchValue} direction={selectedValue?.title || ""} flights={flights}/>
 		</div>
 	);
 };

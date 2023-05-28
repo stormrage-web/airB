@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React  from "react";
 import styles from "./CustomCheckbox.module.scss";
 
-const CustomCheckbox: React.FC<{ children: string }> = ({ children }) => {
-	const [active, setActive] = useState(false);
+const CustomCheckbox: React.FC<{ children: string, color?: string, active: boolean, setActive: (x: boolean) => void }> = ({ children, color, active, setActive }) => {
 
 	return (
 		<div onClick={() => setActive(!active)} className={styles.wrapper}>
@@ -11,7 +10,7 @@ const CustomCheckbox: React.FC<{ children: string }> = ({ children }) => {
 				type="checkbox"
 				className={styles.customCheckbox}
 			/>
-			<label className={styles.label}>{children}</label>
+			<label className={styles.label} style={{color}}>{children}</label>
 		</div>
 	);
 };

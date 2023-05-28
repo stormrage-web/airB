@@ -3,7 +3,7 @@ import styles from "./FlightRow.module.scss";
 import { NavLink } from "react-router-dom";
 
 interface FlightRowProps {
-	id: number;
+	id: string;
 	time: string;
 	title: string;
 }

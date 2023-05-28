@@ -8,13 +8,22 @@ import TaskOne from "./TaskOne/TaskOne";
 import TaskTwo from "./TaskTwo/TaskTwo";
 import TaskThree from "./TaskThree/TaskThree";
 
+interface FlightTabProps {
+	flight: string;
+	direction: string;
+	classes: string[];
+}
 
-
-const FlightTab = () => {
+const FlightTab = ({classes, direction, flight}: FlightTabProps) => {
 	const tabStyles = ({ isActive }: { isActive: boolean }) =>
 		isActive
 			? cx(styles.navigation__tab, styles.navigation__tab_active)
 			: styles.navigation__tab;
+
+	const classOptions = classes.map((classItem, index) => ({
+		value: index.toString(),
+		title: classItem,
+	}));
 
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
@@ -38,16 +47,16 @@ const FlightTab = () => {
 			</nav>
 			<div className={styles.wrapper}>
 				<div className={styles.header}>
-					<h2 className={styles.header__title}>Рейс SU 0019</h2>
+					<h2 className={styles.header__title}>{flight}</h2>
 					<h2 className={styles.header__destination}>
-						Москва - Сочи
+						{direction}
 					</h2>
 				</div>
 				<Routes>
-					<Route path="/task-1" element={<TaskOne/>}/>
-					<Route path="/task-2" element={<TaskTwo/>}/>
-					<Route path="/task-3" element={<TaskThree/>}/>
-					<Route path="/task-4" element={<TaskOne/>}/>
+					<Route path="/task-1" element={<TaskOne classes={classOptions} flight={flight}/>}/>
+					<Route path="/task-2" element={<TaskTwo classes={classOptions} flight={flight}/>}/>
+					<Route path="/task-3" element={<TaskThree classes={classOptions} flight={flight}/>}/>
+					<Route path="/task-4" element={<TaskOne classes={classOptions} flight={flight}/>} />
 					<Route path="*" element={<Navigate to="task-1"/>}/>
 				</Routes>
 				<div className={styles.dates}>
