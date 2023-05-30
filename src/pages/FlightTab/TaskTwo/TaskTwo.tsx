@@ -27,7 +27,7 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 	const { tabInfo, tabParams } = useAppSelector(
 		(state) => state.flightReducer,
 	);
-	const mx = Math.max(...(tabInfo as TabOneData).data.map(item => item.y));
+	const mx = (tabInfo as TabOneData).data?.length ? Math.max(...(tabInfo as TabOneData).data.map(item => item.y)) : 0;
 
 	const handleChangeClass = (x: string) => {
 		fetchFlightHandler({
