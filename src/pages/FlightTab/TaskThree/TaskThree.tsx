@@ -177,6 +177,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 							dataKey={"бизнес/командировки"}
 							stroke="#4082F4"
 							activeDot={{ r: 5 }}
+							dot={{r: 0}}
 							isAnimationActive={false}
 						/>
 						<Line
@@ -184,6 +185,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 							dataKey={"спонтанное"}
 							stroke="#E3485B"
 							activeDot={{ r: 5 }}
+							dot={{r: 0}}
 							isAnimationActive={false}
 						/>
 						<Line
@@ -191,6 +193,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 							dataKey={"заранее запланированное"}
 							stroke="#33B15E"
 							activeDot={{ r: 5 }}
+							dot={{r: 0}}
 							isAnimationActive={false}
 						/>
 						<Brush dataKey="date" height={40} stroke="#4082F4">
