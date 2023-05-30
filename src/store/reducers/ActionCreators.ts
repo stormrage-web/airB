@@ -40,7 +40,7 @@ export const fetchFlight =
 								profileName = "Заранее запланированное";
 								break;
 							}
-							return "&profile_types=" + profileName;
+							return profile ? ("&profile_types=" + profileName) : "";
 						})
 						.join("")
 					: "";

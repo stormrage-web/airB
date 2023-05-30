@@ -3,7 +3,6 @@ import styles from "./FlightTab.module.scss";
 import cx from "classnames";
 import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
-import CustomDatepicker from "../../widgets/CustomDatepicker/CustomDatepicker";
 import TaskOne from "./TaskOne/TaskOne";
 import TaskTwo from "./TaskTwo/TaskTwo";
 import TaskThree from "./TaskThree/TaskThree";
@@ -25,8 +24,6 @@ const FlightTab = ({classes, direction, flight}: FlightTabProps) => {
 		title: classItem,
 	}));
 
-	const [startDate, setStartDate] = useState<Date | null>(new Date());
-	const [endDate, setEndDate] = useState<Date | null>(new Date());
 
 	return (
 		<div className={styles.tabWrapper}>
@@ -59,18 +56,18 @@ const FlightTab = ({classes, direction, flight}: FlightTabProps) => {
 					<Route path="/task-4" element={<TaskOne classes={classOptions} flight={flight}/>} />
 					<Route path="*" element={<Navigate to="task-1"/>}/>
 				</Routes>
-				<div className={styles.dates}>
-					<CustomDatepicker
-						date={startDate}
-						setDate={setStartDate}
-						maxDate={endDate}
-					/>
-					<CustomDatepicker
-						date={endDate}
-						setDate={setEndDate}
-						minDate={startDate}
-					/>
-				</div>
+				{/*<div className={styles.dates}>*/}
+				{/*	<CustomDatepicker*/}
+				{/*		date={startDate}*/}
+				{/*		setDate={setStartDate}*/}
+				{/*		maxDate={endDate}*/}
+				{/*	/>*/}
+				{/*	<CustomDatepicker*/}
+				{/*		date={endDate}*/}
+				{/*		setDate={setEndDate}*/}
+				{/*		minDate={startDate}*/}
+				{/*	/>*/}
+				{/*</div>*/}
 			</div>
 		</div>
 	);

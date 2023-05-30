@@ -7,20 +7,16 @@ import {
 	Brush,
 	Line,
 	LineChart,
-	ReferenceArea,
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
 	YAxis,
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
-import { graph2 } from "../../../shared/mocks/graph2";
 import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
 import { useTabsLogic } from "../../../hooks/useFlight.logic";
 import { useAppSelector } from "../../../hooks/redux";
 import { TabThreeItem } from "../../../store/reducers/FlightSlice";
-
-const data = graph2;
 
 interface TaskThreeProps {
 	classes: Option[];
@@ -32,7 +28,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 	const { tabInfo, tabParams } = useAppSelector(
 		(state) => state.flightReducer,
 	);
-	const [graph, setGraph] = useState<any[]>([]);
+	const [graph, setGraph] = useState<any[]>();
 
 	useEffect(() => {
 		fetchFlightHandler({
@@ -53,13 +49,22 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 		const result: any[] = [];
 		(tabInfo as TabThreeItem[]).forEach((profile) => {
 			profile.data.forEach((item) => {
-				const obj = { x: item.x };
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				obj[profile.title] = item.y;
-				result.push(obj);
+				const buf = result.findIndex(
+					(resultItem) => resultItem.x === item.x,
+				);
+				if (buf !== -1) {
+					console.log(result[buf]);
+					result[buf][profile.title] = item.y;
+				} else {
+					const obj = { x: item.x };
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					obj[profile.title] = item.y;
+					result.push(obj);
+				}
 			});
 		});
+		console.log(result);
 		setGraph(result);
 	}, [tabInfo]);
 
@@ -79,7 +84,6 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 	const handleChangeProfile = (n: number) => (x: boolean) => {
 		const profiles = [...(tabParams.profiles || [])];
 		profiles[n] = x;
-		console.log(profiles);
 		fetchFlightHandler({
 			tab: 3,
 			data: {
@@ -150,7 +154,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 					</div>
 				</div>
 			</div>
-			{!(tabInfo as TabThreeItem[]).length ? (
+			{!(graph || []).length ? (
 				<div className={styles.noData}>
 					Нет данных для рейса с заданными параметрами
 				</div>
@@ -158,41 +162,42 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 				<ResponsiveContainer width="100%" height={300}>
 					<LineChart data={graph}>
 						<XAxis dataKey="date" stroke="#4082F4" />
-						<YAxis dataKey="value" />
-						<ReferenceArea
-							x1={"07.06.2018"}
-							x2={"24.07.2018"}
-							y1={0}
-							y2={45}
-							fill="#000"
-							fillOpacity={0.3}
-							label="zone 1"
-						/>
-						<ReferenceArea
-							x1={"24.07.2018"}
-							x2={"24.09.2018"}
-							y1={0}
-							y2={30}
-							fill="#421"
-							fillOpacity={0.3}
-							label="zone 2"
-						/>
+						<YAxis dataKey="отдых" />
 						<Tooltip />
-						{graph.map((item) => (
-							<Line
-								key={item.title}
-								type="monotone"
-								dataKey={item.title}
-								stroke="#4082F4"
-								activeDot={{ r: 5 }}
-							/>
-						))}
-
+						<Line
+							type="monotone"
+							dataKey={"отдых"}
+							stroke="#E38048"
+							activeDot={{ r: 5 }}
+							dot={{r: 0}}
+							isAnimationActive={false}
+						/>
+						<Line
+							type="monotone"
+							dataKey={"бизнес/командировки"}
+							stroke="#4082F4"
+							activeDot={{ r: 5 }}
+							isAnimationActive={false}
+						/>
+						<Line
+							type="monotone"
+							dataKey={"спонтанное"}
+							stroke="#E3485B"
+							activeDot={{ r: 5 }}
+							isAnimationActive={false}
+						/>
+						<Line
+							type="monotone"
+							dataKey={"заранее запланированное"}
+							stroke="#33B15E"
+							activeDot={{ r: 5 }}
+							isAnimationActive={false}
+						/>
 						<Brush dataKey="date" height={40} stroke="#4082F4">
-							<AreaChart data={data}>
+							<AreaChart data={graph}>
 								<Area
 									type="monotone"
-									dataKey="value"
+									dataKey="отдых"
 									fill="#CADFF5"
 									fillOpacity={1}
 									strokeOpacity={0}
