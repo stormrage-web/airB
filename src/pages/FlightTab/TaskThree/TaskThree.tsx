@@ -29,6 +29,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 		(state) => state.flightReducer,
 	);
 	const [graph, setGraph] = useState<any[]>();
+	const [maxTitle, setMaxTitle] = useState({title: "отдых", value: 0});
 
 	useEffect(() => {
 		fetchFlightHandler({
@@ -47,24 +48,28 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 
 	useEffect(() => {
 		const result: any[] = [];
-		(tabInfo as TabThreeItem[]).forEach((profile) => {
-			profile.data.forEach((item) => {
+		((tabInfo as TabThreeItem[])?.length ? (tabInfo as TabThreeItem[]) || [] : []).forEach((profile) => {
+			(profile.data || []).forEach((item) => {
 				const buf = result.findIndex(
 					(resultItem) => resultItem.x === item.x,
 				);
 				if (buf !== -1) {
-					console.log(result[buf]);
 					result[buf][profile.title] = item.y;
+					if (item.y >= maxTitle.value) {
+						setMaxTitle({title: profile.title, value: item.y});
+					}
 				} else {
 					const obj = { x: item.x };
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					obj[profile.title] = item.y;
+					if (item.y >= maxTitle.value) {
+						setMaxTitle({title: profile.title, value: item.y});
+					}
 					result.push(obj);
 				}
 			});
 		});
-		console.log(result);
 		setGraph(result);
 	}, [tabInfo]);
 
@@ -162,7 +167,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 				<ResponsiveContainer width="100%" height={300}>
 					<LineChart data={graph}>
 						<XAxis dataKey="date" stroke="#4082F4" />
-						<YAxis dataKey="отдых" />
+						<YAxis dataKey={maxTitle.title} max={maxTitle.value} />
 						<Tooltip />
 						<Line
 							type="monotone"
