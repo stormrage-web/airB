@@ -16,7 +16,7 @@ import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption"
 import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
 import { useTabsLogic } from "../../../hooks/useFlight.logic";
 import { useAppSelector } from "../../../hooks/redux";
-import { TabThreeItem } from "../../../store/reducers/FlightSlice";
+import { TabThreeItem } from "../../../models/flights.interface";
 
 interface TaskThreeProps {
 	classes: Option[];

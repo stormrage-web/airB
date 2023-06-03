@@ -1,12 +1,12 @@
 import { AppDispatch } from "../store";
 import axios from "axios";
+import { flightSlice } from "./FlightSlice";
 import {
 	Coordinates,
-	flightSlice,
 	FlightState,
 	TabOneData,
 	TabParams,
-} from "./FlightSlice";
+} from "../../models/flights.interface";
 
 export const mainEndPoint = "http://91.227.18.29:5000/";
 
@@ -40,7 +40,9 @@ export const fetchFlight =
 								profileName = "Заранее запланированное";
 								break;
 							}
-							return profile ? ("&profile_types=" + profileName) : "";
+							return profile
+								? "&profile_types=" + profileName
+								: "";
 						})
 						.join("")
 					: "";

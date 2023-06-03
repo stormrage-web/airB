@@ -15,7 +15,7 @@ import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption"
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
 import { useTabsLogic } from "../../../hooks/useFlight.logic";
 import { useAppSelector } from "../../../hooks/redux";
-import { TabOneData } from "../../../store/reducers/FlightSlice";
+import { TabOneData } from "../../../models/flights.interface";
 
 interface TaskTwoProps {
 	classes: Option[];
