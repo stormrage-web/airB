@@ -23,13 +23,36 @@ interface TaskThreeProps {
 	flight: string;
 }
 
+const profileParams = [
+	{
+		label: "Отдых",
+		dataKey: "отдых",
+		color: "#E38048",
+	},
+	{
+		label: "Бизнес/командировки",
+		dataKey: "бизнес/командировки",
+		color: "#4082F4",
+	},
+	{
+		label: "Спонтанное",
+		dataKey: "спонтанное",
+		color: "#E3485B",
+	},
+	{
+		label: "Заранее \u00A0 запланированное",
+		dataKey: "заранее запланированное",
+		color: "#33B15E",
+	},
+];
+
 const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 	const { fetchFlightHandler } = useTabsLogic();
 	const { tabInfo, tabParams } = useAppSelector(
 		(state) => state.flightReducer,
 	);
 	const [graph, setGraph] = useState<any[]>();
-	const [maxTitle, setMaxTitle] = useState({title: "отдых", value: 0});
+	const [maxTitle, setMaxTitle] = useState({ title: "отдых", value: 0 });
 
 	useEffect(() => {
 		fetchFlightHandler({
@@ -48,7 +71,10 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 
 	useEffect(() => {
 		const result: any[] = [];
-		((tabInfo as TabThreeItem[])?.length ? (tabInfo as TabThreeItem[]) || [] : []).forEach((profile) => {
+		((tabInfo as TabThreeItem[])?.length
+			? (tabInfo as TabThreeItem[]) || []
+			: []
+		).forEach((profile) => {
 			(profile.data || []).forEach((item) => {
 				const buf = result.findIndex(
 					(resultItem) => resultItem.x === item.x,
@@ -56,7 +82,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 				if (buf !== -1) {
 					result[buf][profile.title] = item.y;
 					if (item.y >= maxTitle.value) {
-						setMaxTitle({title: profile.title, value: item.y});
+						setMaxTitle({ title: profile.title, value: item.y });
 					}
 				} else {
 					const obj = { x: item.x };
@@ -64,7 +90,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 					// @ts-ignore
 					obj[profile.title] = item.y;
 					if (item.y >= maxTitle.value) {
-						setMaxTitle({title: profile.title, value: item.y});
+						setMaxTitle({ title: profile.title, value: item.y });
 					}
 					result.push(obj);
 				}
@@ -128,34 +154,16 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 						Профили спроса
 					</p>
 					<div className={styles.filters__checkboxesWrapper}>
-						<CustomCheckbox
-							active={(tabParams?.profiles || [])[0]}
-							setActive={handleChangeProfile(0)}
-							color={"#E38048"}
-						>
-							Отдых
-						</CustomCheckbox>
-						<CustomCheckbox
-							active={(tabParams?.profiles || [])[1]}
-							setActive={handleChangeProfile(1)}
-							color={"#4082F4"}
-						>
-							Бизнес/командировки
-						</CustomCheckbox>
-						<CustomCheckbox
-							active={(tabParams?.profiles || [])[2]}
-							setActive={handleChangeProfile(2)}
-							color={"#E3485B"}
-						>
-							Спонтанное
-						</CustomCheckbox>
-						<CustomCheckbox
-							active={(tabParams?.profiles || [])[3]}
-							setActive={handleChangeProfile(3)}
-							color={"#33B15E"}
-						>
-							Заранее&nbsp;запланированное
-						</CustomCheckbox>
+						{profileParams.map((checkbox, index) => (
+							<CustomCheckbox
+								key={checkbox.label}
+								active={(tabParams?.profiles || [])[index]}
+								setActive={handleChangeProfile(index)}
+								color={checkbox.color}
+							>
+								{checkbox.label}
+							</CustomCheckbox>
+						))}
 					</div>
 				</div>
 			</div>
@@ -169,38 +177,17 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 						<XAxis dataKey="date" stroke="#4082F4" />
 						<YAxis dataKey={maxTitle.title} max={maxTitle.value} />
 						<Tooltip />
-						<Line
-							type="monotone"
-							dataKey={"отдых"}
-							stroke="#E38048"
-							activeDot={{ r: 5 }}
-							dot={{r: 0}}
-							isAnimationActive={false}
-						/>
-						<Line
-							type="monotone"
-							dataKey={"бизнес/командировки"}
-							stroke="#4082F4"
-							activeDot={{ r: 5 }}
-							dot={{r: 0}}
-							isAnimationActive={false}
-						/>
-						<Line
-							type="monotone"
-							dataKey={"спонтанное"}
-							stroke="#E3485B"
-							activeDot={{ r: 5 }}
-							dot={{r: 0}}
-							isAnimationActive={false}
-						/>
-						<Line
-							type="monotone"
-							dataKey={"заранее запланированное"}
-							stroke="#33B15E"
-							activeDot={{ r: 5 }}
-							dot={{r: 0}}
-							isAnimationActive={false}
-						/>
+						{profileParams.map(profile => (
+							<Line
+								key={profile.dataKey}
+								type="monotone"
+								dataKey={profile.dataKey}
+								stroke={profile.color}
+								activeDot={{ r: 5 }}
+								dot={{ r: 0 }}
+								isAnimationActive={false}
+							/>
+						))}
 						<Brush dataKey="date" height={40} stroke="#4082F4">
 							<AreaChart data={graph}>
 								<Area
