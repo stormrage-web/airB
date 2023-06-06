@@ -52,7 +52,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 		maxTitle,
 		graph,
 		fetchFlightHandler,
-	} = useTaskThreeLogic({ classes, flight });
+	} = useTaskThreeLogic({ flight });
 
 	useEffect(() => {
 		fetchFlightHandler({
