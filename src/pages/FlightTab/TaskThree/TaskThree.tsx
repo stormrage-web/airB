@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./TaskThree.module.scss";
 import { CustomSelect } from "../../../widgets/CustomSelect/CustomSelect";
 import {
@@ -14,9 +14,7 @@ import {
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
-import { useTabsLogic } from "../../../hooks/useFlight.logic";
-import { useAppSelector } from "../../../hooks/redux";
-import { TabThreeItem } from "../../../models/flights.interface";
+import { useTaskThreeLogic } from "./TaskThree.logic";
 
 interface TaskThreeProps {
 	classes: Option[];
@@ -47,12 +45,14 @@ const profileParams = [
 ];
 
 const TaskThree = ({ classes, flight }: TaskThreeProps) => {
-	const { fetchFlightHandler } = useTabsLogic();
-	const { tabInfo, tabParams } = useAppSelector(
-		(state) => state.flightReducer,
-	);
-	const [graph, setGraph] = useState<any[]>();
-	const [maxTitle, setMaxTitle] = useState({ title: "отдых", value: 0 });
+	const {
+		tabParams,
+		handleChangeClass,
+		handleChangeProfile,
+		maxTitle,
+		graph,
+		fetchFlightHandler,
+	} = useTaskThreeLogic({ classes, flight });
 
 	useEffect(() => {
 		fetchFlightHandler({
@@ -68,64 +68,6 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 			},
 		});
 	}, []);
-
-	useEffect(() => {
-		const result: any[] = [];
-		((tabInfo as TabThreeItem[])?.length
-			? (tabInfo as TabThreeItem[]) || []
-			: []
-		).forEach((profile) => {
-			(profile.data || []).forEach((item) => {
-				const buf = result.findIndex(
-					(resultItem) => resultItem.x === item.x,
-				);
-				if (buf !== -1) {
-					result[buf][profile.title] = item.y;
-					if (item.y >= maxTitle.value) {
-						setMaxTitle({ title: profile.title, value: item.y });
-					}
-				} else {
-					const obj = { x: item.x };
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					obj[profile.title] = item.y;
-					if (item.y >= maxTitle.value) {
-						setMaxTitle({ title: profile.title, value: item.y });
-					}
-					result.push(obj);
-				}
-			});
-		});
-		setGraph(result);
-	}, [tabInfo]);
-
-	const handleChangeClass = (x: string) => {
-		fetchFlightHandler({
-			tab: 3,
-			data: {
-				flight: flight,
-				tabParams: {
-					profiles: tabParams.profiles,
-					class: x,
-				},
-			},
-		});
-	};
-
-	const handleChangeProfile = (n: number) => (x: boolean) => {
-		const profiles = [...(tabParams.profiles || [])];
-		profiles[n] = x;
-		fetchFlightHandler({
-			tab: 3,
-			data: {
-				flight: flight,
-				tabParams: {
-					profiles: profiles,
-					class: tabParams.class,
-				},
-			},
-		});
-	};
 
 	return (
 		<div>
@@ -177,7 +119,7 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 						<XAxis dataKey="date" stroke="#4082F4" />
 						<YAxis dataKey={maxTitle.title} max={maxTitle.value} />
 						<Tooltip />
-						{profileParams.map(profile => (
+						{profileParams.map((profile) => (
 							<Line
 								key={profile.dataKey}
 								type="monotone"

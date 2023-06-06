@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./TaskOne.module.scss";
 import CustomDatepicker from "../../../widgets/CustomDatepicker/CustomDatepicker";
 import { CustomSelect } from "../../../widgets/CustomSelect/CustomSelect";
@@ -16,74 +16,38 @@ import {
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
-import { useAppSelector } from "../../../hooks/redux";
-import { useTabsLogic } from "../../../hooks/useFlight.logic";
+import { useTaskOneLogic } from "./TaskOne.logic";
 
 interface TaskOneProps {
 	classes: Option[];
 	flight: string;
 }
 
-const formatDate = (x: string) => {
-	const arr = x.split(".");
-	return arr[2] + "-" + arr[1] + "-" + arr[0];
-};
-
-const formatDateToString = (x: Date | null) => {
-	if (x) {
-		const arr = x.toISOString().split("-");
-		console.log(arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0]);
-		return arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0];
-	}
-
-	return null;
-};
-
 const TaskOne = ({ classes, flight }: TaskOneProps) => {
-	const { fetchFlightHandler } = useTabsLogic();
-	const { tabInfo, tabParams } = useAppSelector(
-		(state) => state.flightReducer,
-	);
-
-	const [isSeasonTypeActive, setIsSeasonTypeActive] = useState(true);
-	const handleTypeChange = (x: boolean) => setIsSeasonTypeActive(x);
+	const {
+		fetchFlightHandler,
+		handleTypeChange,
+		handleChangeDate,
+		handleChangeClass,
+		isSeasonTypeActive,
+		tabParams,
+		tabInfo,
+		formatDate,
+	} = useTaskOneLogic({ flight });
 
 	useEffect(() => {
-		console.log(flight);
 		fetchFlightHandler({
 			tab: 1,
 			data: {
 				flight: flight,
-				tabParams: { date: "04.03.2019", class: classes[0].title, type: 0 },
+				tabParams: {
+					date: "04.03.2019",
+					class: classes[0].title,
+					type: 0,
+				},
 			},
 		});
 	}, []);
-
-	const handleChangeDate = (x: Date | null) => {
-		fetchFlightHandler({
-			tab: 1,
-			data: {
-				flight: flight,
-				tabParams: {
-					...tabParams,
-					date: formatDateToString(x) || undefined,
-				},
-			},
-		});
-	};
-
-	const handleChangeClass = (x: string) => {
-		fetchFlightHandler({
-			tab: 1,
-			data: {
-				flight: flight,
-				tabParams: {
-					...tabParams,
-					class: x,
-				},
-			},
-		});
-	};
 
 	return (
 		<>
@@ -104,9 +68,18 @@ const TaskOne = ({ classes, flight }: TaskOneProps) => {
 						Класс бронирования
 					</p>
 					<CustomSelect
-						selected={classes.find(item => item.title === tabParams.class) || null}
+						selected={
+							classes.find(
+								(item) => item.title === tabParams.class,
+							) || null
+						}
 						options={classes}
-						onChange={(e) => handleChangeClass(classes.find(item => item.value === e)?.title || "")}
+						onChange={(e) =>
+							handleChangeClass(
+								classes.find((item) => item.value === e)
+									?.title || "",
+							)
+						}
 					/>
 				</div>
 				<div>

@@ -9,59 +9,35 @@ import {
 	ResponsiveContainer,
 	Tooltip,
 	XAxis,
-	YAxis,
+	YAxis
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
-import { useTabsLogic } from "../../../hooks/useFlight.logic";
-import { useAppSelector } from "../../../hooks/redux";
 import { TabOneData } from "../../../models/flights.interface";
+import { useTaskTwoLogic } from "./TaskTwo.logic";
 
 interface TaskTwoProps {
-	classes: Option[];
-	flight: string;
+  classes: Option[];
+  flight: string;
 }
 
 const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
-	const { fetchFlightHandler } = useTabsLogic();
-	const { tabInfo, tabParams } = useAppSelector(
-		(state) => state.flightReducer,
-	);
-	const mx = (tabInfo as TabOneData).data?.length ? Math.max(...(tabInfo as TabOneData).data.map(item => item.y)) : 0;
-
-	const handleChangeClass = (x: string) => {
-		fetchFlightHandler({
-			tab: 2,
-			data: {
-				flight: flight,
-				tabParams: {
-					type: tabParams.type,
-					class: x,
-				},
-			},
-		});
-	};
-
-	const handleChangeType = (x: boolean) => {
-		fetchFlightHandler({
-			tab: 2,
-			data: {
-				flight: flight,
-				tabParams: {
-					class: tabParams.class,
-					type: x ? 0 : 1,
-				},
-			},
-		});
-	};
+	const {
+		fetchFlightHandler,
+		handleChangeType,
+		handleChangeClass,
+		mx,
+		tabParams,
+		tabInfo
+	} = useTaskTwoLogic({ flight });
 
 	useEffect(() => {
 		fetchFlightHandler({
 			tab: 2,
 			data: {
 				flight: flight,
-				tabParams: { class: classes[0].title, type: 0 },
-			},
+				tabParams: { class: classes[0].title, type: 0 }
+			}
 		});
 	}, []);
 
@@ -70,19 +46,19 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 			<div className={styles.filters}>
 				<div>
 					<p className={styles.filters__selectTitle}>
-						Класс бронирования
+            Класс бронирования
 					</p>
 					<CustomSelect
 						selected={
 							classes.find(
-								(item) => item.title === tabParams.class,
+								(item) => item.title === tabParams.class
 							) || null
 						}
 						options={classes}
 						onChange={(e) =>
 							handleChangeClass(
 								classes.find((item) => item.value === e)
-									?.title || "",
+									?.title || ""
 							)
 						}
 					/>
@@ -110,12 +86,12 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 								y1={0}
 								y2={Math.random() * mx}
 								fill={"#" + Math.floor(
-									Math.random() * 16777215,
+									Math.random() * 16777215
 								).toString(16)}
 								fillOpacity={0.3}
 								label={season.name}
 							/>
-							asd
+              asd
 						</>
 					))}
 					<Tooltip />
