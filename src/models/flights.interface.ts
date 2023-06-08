@@ -5,11 +5,12 @@ export interface DateRange {
 
 export interface TabParams {
   date?: string;
+  start_date?: string;
   class?: string;
   dateRange?: DateRange;
   type?: 0 | 1;
   profiles?: boolean[];
-  deep?: number;
+  prediction_depth?: number;
 }
 
 export interface Coordinates {
@@ -33,9 +34,14 @@ export interface TabOneData {
   seasons: Seasons[];
 }
 
+export interface TabFourData {
+  dates: string[];
+  predictions: number[];
+}
+
 export interface FlightState {
   flight: string;
   tabParams: TabParams;
-  tabInfo: Coordinates[] | TabOneData | TabThreeItem[];
+  tabInfo: Coordinates[] | TabOneData | TabThreeItem[] | TabFourData;
   isLoading: boolean;
 }

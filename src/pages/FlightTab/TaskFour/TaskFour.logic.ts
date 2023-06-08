@@ -1,73 +1,71 @@
 import { useTabsLogic } from "../../../hooks/useFlight.logic";
 import { useAppSelector } from "../../../hooks/redux";
 import { useEffect, useState } from "react";
-import { TabThreeItem } from "../../../models/flights.interface";
+import { TabFourData } from "../../../models/flights.interface";
 
-export const useTaskThreeLogic = ({ flight }: { flight: string }) => {
+interface graphItem {
+	date: string;
+	prediction: number;
+}
+
+const formatDate = (x: string) => {
+	const arr = x.split(".");
+	return arr[2] + "-" + arr[1] + "-" + arr[0];
+};
+
+const formatDateToString = (x: Date | null) => {
+	if (x) {
+		const arr = x.toISOString().split("-");
+		console.log(arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0]);
+		return arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0];
+	}
+
+	return null;
+};
+
+export const useTaskFourLogic = ({ flight }: { flight: string }) => {
 	const { fetchFlightHandler } = useTabsLogic();
 	const { tabInfo, tabParams } = useAppSelector(
 		(state) => state.flightReducer
 	);
-	const [graph, setGraph] = useState<any[]>();
-	const [maxTitle, setMaxTitle] = useState({ title: "отдых", value: 0 });
+	const [graph, setGraph] = useState<graphItem[]>();
 
 	useEffect(() => {
-		const result: any[] = [];
-		((tabInfo as TabThreeItem[])?.length
-			? (tabInfo as TabThreeItem[]) || []
-			: []
-		).forEach((profile) => {
-			(profile.data || []).forEach((item) => {
-				const buf = result.findIndex(
-					(resultItem) => resultItem.x === item.x
-				);
-				if (buf !== -1) {
-					result[buf][profile.title] = item.y;
-					if (item.y >= maxTitle.value) {
-						setMaxTitle({ title: profile.title, value: item.y });
-					}
-				} else {
-					const obj = { x: item.x };
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					obj[profile.title] = item.y;
-					if (item.y >= maxTitle.value) {
-						setMaxTitle({ title: profile.title, value: item.y });
-					}
-					result.push(obj);
-				}
-			});
-		});
+		const result: graphItem[] = [];
+		for (let i = 0; i < (tabInfo as TabFourData)?.dates?.length; i++) {
+			result.push({date: (tabInfo as TabFourData)?.dates[i], prediction: (tabInfo as TabFourData)?.predictions[i]});
+		}
 		setGraph(result);
 	}, [tabInfo]);
 
-	const handleChangeClass = (x: string) => {
+	const handleChangeDate = (x: Date | null) => {
 		fetchFlightHandler({
-			tab: 3,
+			tab: 1,
 			data: {
 				flight: flight,
 				tabParams: {
-					profiles: tabParams.profiles,
+					...tabParams,
+					date: formatDateToString(x) || undefined
+				}
+			}
+		});
+	};
+
+	const handleChangeClass = (x: string) => {
+		fetchFlightHandler({
+			tab: 4,
+			data: {
+				flight: flight,
+				tabParams: {
+					start_date: tabParams.start_date,
+					prediction_depth: tabParams.prediction_depth,
 					class: x
 				}
 			}
 		});
 	};
 
-	const handleChangeProfile = (n: number) => (x: boolean) => {
-		const profiles = [...(tabParams.profiles || [])];
-		profiles[n] = x;
-		fetchFlightHandler({
-			tab: 3,
-			data: {
-				flight: flight,
-				tabParams: {
-					profiles: profiles,
-					class: tabParams.class
-				}
-			}
-		});
-	};
 
-	return { handleChangeClass, handleChangeProfile, graph, maxTitle, tabParams, fetchFlightHandler };
+
+	return { handleChangeClass, graph, tabParams, fetchFlightHandler, formatDate, handleChangeDate };
 };

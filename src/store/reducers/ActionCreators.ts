@@ -22,6 +22,12 @@ export const fetchFlight =
 				const booking_class_param = data.tabParams?.class
 					? "&booking_class_param=" + data.tabParams?.class
 					: "";
+				const start_date = data.tabParams?.start_date
+					? "&start_date=" + data.tabParams?.start_date
+					: "";
+				const prediction_depth = data.tabParams?.prediction_depth
+					? "&prediction_depth=" + data.tabParams?.prediction_depth
+					: "";
 				const profiles_param = data.tabParams?.profiles?.length
 					? data.tabParams.profiles
 						.map((profile, index) => {
@@ -60,6 +66,8 @@ export const fetchFlight =
 					flight_date_param +
 					booking_class_param +
 					plot_type_param +
+					start_date +
+					prediction_depth +
 					profiles_param,
 				);
 				if (tab == 2) {

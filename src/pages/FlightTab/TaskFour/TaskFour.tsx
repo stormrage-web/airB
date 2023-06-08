@@ -13,57 +13,33 @@ import {
 	YAxis,
 } from "recharts";
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
-import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
-import { useTaskThreeLogic } from "./TaskFour.logic";
+import { useTaskFourLogic } from "./TaskFour.logic";
+import CustomDatepicker from "../../../widgets/CustomDatepicker/CustomDatepicker";
 
 interface TaskThreeProps {
 	classes: Option[];
 	flight: string;
 }
 
-const profileParams = [
-	{
-		label: "Отдых",
-		dataKey: "отдых",
-		color: "#E38048",
-	},
-	{
-		label: "Бизнес/командировки",
-		dataKey: "бизнес/командировки",
-		color: "#4082F4",
-	},
-	{
-		label: "Спонтанное",
-		dataKey: "спонтанное",
-		color: "#E3485B",
-	},
-	{
-		label: "Заранее \u00A0 запланированное",
-		dataKey: "заранее запланированное",
-		color: "#33B15E",
-	},
-];
-
 const TaskFour = ({ classes, flight }: TaskThreeProps) => {
 	const {
 		tabParams,
 		handleChangeClass,
-		handleChangeProfile,
-		maxTitle,
 		graph,
 		fetchFlightHandler,
-	} = useTaskThreeLogic({ flight });
+		handleChangeDate,
+		formatDate
+	} = useTaskFourLogic({ flight });
 
 	useEffect(() => {
 		fetchFlightHandler({
-			tab: 3,
+			tab: 4,
 			data: {
 				flight: flight,
 				tabParams: {
 					class: classes[0].title,
-					date: undefined,
-					type: undefined,
-					profiles: [false, false, false, false],
+					start_date: "01.01.2018",
+					prediction_depth: 1,
 				},
 			},
 		});
@@ -72,6 +48,17 @@ const TaskFour = ({ classes, flight }: TaskThreeProps) => {
 	return (
 		<div>
 			<div className={styles.filters}>
+				<div>
+					<p className={styles.filters__selectTitle}>
+						Дата бронирования
+					</p>
+					<CustomDatepicker
+						date={
+							new Date(formatDate(tabParams.date || "04.03.2019"))
+						}
+						setDate={handleChangeDate}
+					/>
+				</div>
 				<div>
 					<p className={styles.filters__selectTitle}>
 						Класс бронирования
@@ -91,23 +78,6 @@ const TaskFour = ({ classes, flight }: TaskThreeProps) => {
 						}
 					/>
 				</div>
-				<div>
-					<p className={styles.filters__selectTitle}>
-						Профили спроса
-					</p>
-					<div className={styles.filters__checkboxesWrapper}>
-						{profileParams.map((checkbox, index) => (
-							<CustomCheckbox
-								key={checkbox.label}
-								active={(tabParams?.profiles || [])[index]}
-								setActive={handleChangeProfile(index)}
-								color={checkbox.color}
-							>
-								{checkbox.label}
-							</CustomCheckbox>
-						))}
-					</div>
-				</div>
 			</div>
 			{!(graph || []).length ? (
 				<div className={styles.noData}>
@@ -117,19 +87,16 @@ const TaskFour = ({ classes, flight }: TaskThreeProps) => {
 				<ResponsiveContainer width="100%" height={300}>
 					<LineChart data={graph}>
 						<XAxis dataKey="date" stroke="#4082F4" />
-						<YAxis dataKey={maxTitle.title} max={maxTitle.value} />
+						<YAxis dataKey="prediction" />
 						<Tooltip />
-						{profileParams.map((profile) => (
-							<Line
-								key={profile.dataKey}
-								type="monotone"
-								dataKey={profile.dataKey}
-								stroke={profile.color}
-								activeDot={{ r: 5 }}
-								dot={{ r: 0 }}
-								isAnimationActive={false}
-							/>
-						))}
+						<Line
+							type="monotone"
+							dataKey="prediction"
+							stroke="#4082F4"
+							activeDot={{ r: 5 }}
+							dot={{ r: 0 }}
+							isAnimationActive={false}
+						/>
 						<Brush dataKey="date" height={40} stroke="#4082F4">
 							<AreaChart data={graph}>
 								<Area
