@@ -29,7 +29,7 @@ export const fetchFlight =
 					? "&prediction_depth=" + data.tabParams?.prediction_depth
 					: "";
 				const profiles_param = data.tabParams?.profiles?.length
-					? data.tabParams.profiles
+					? "&profile_types=" + data.tabParams.profiles
 						.map((profile, index) => {
 							let profileName = "";
 							switch (index) {
@@ -47,10 +47,9 @@ export const fetchFlight =
 								break;
 							}
 							return profile
-								? "&profile_types=" + profileName
+								? profileName
 								: "";
-						})
-						.join("")
+						}).filter((item) => item?.length).join(",")
 					: "";
 				const plot_type_param =
 				tab === 2

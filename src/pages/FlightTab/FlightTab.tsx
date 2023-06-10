@@ -51,7 +51,7 @@ const FlightTab = ({classes, direction, flight}: FlightTabProps) => {
 					</h2>
 				</div>
 				<Routes>
-					<Route path="/task-1" element={<TaskOne classes={classOptions} flight={flight}/>}/>
+					<Route path="/task-1" element={<TaskOne flight={flight}/>}/>
 					<Route path="/task-2" element={<TaskTwo classes={classOptions} flight={flight}/>}/>
 					<Route path="/task-3" element={<TaskThree classes={classOptions} flight={flight}/>}/>
 					<Route path="/task-4" element={<TaskFour classes={classOptions} flight={flight}/>} />
