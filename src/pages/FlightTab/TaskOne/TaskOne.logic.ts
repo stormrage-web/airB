@@ -10,7 +10,6 @@ const formatDate = (x: string) => {
 const formatDateToString = (x: Date | null) => {
 	if (x) {
 		const arr = x.toISOString().split("-");
-		console.log(arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0]);
 		return arr[2].slice(0, 2) + "." + arr[1] + "." + arr[0];
 	}
 

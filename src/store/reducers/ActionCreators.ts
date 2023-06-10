@@ -8,7 +8,7 @@ import {
 	TabParams,
 } from "../../models/flights.interface";
 
-export const mainEndPoint = "http://91.227.18.29:5000/";
+export const mainEndPoint = "http://51.250.91.130:5000/";
 
 export const fetchFlight =
 	({ tab, data }: { tab: number; data: Partial<FlightState> }) =>

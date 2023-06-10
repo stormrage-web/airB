@@ -10,7 +10,6 @@ interface FlightsTableProps {
 }
 
 const FlightsTable = ({search, direction, flights}: FlightsTableProps) => {
-
 	return (
 		<table className={styles.wrapper}>
 			<thead>
@@ -21,7 +20,7 @@ const FlightsTable = ({search, direction, flights}: FlightsTableProps) => {
 				</tr>
 			</thead>
 			<tbody>
-				{flights.filter((flight) => !search.length || flight.title.indexOf(search) != -1).filter((flight) => direction.length ? flight.direction.trim() === direction.trim() : true).map((row, index) => (
+				{flights.filter((flight) => !search.length || flight.title.indexOf(search) != -1).filter((flight) => direction.length ? flight.direction.trim() === direction.trim() : true).map((row) => (
 					<FlightRow
 						key={row.title + row.time}
 						id={row.title + row.time}

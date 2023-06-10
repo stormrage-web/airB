@@ -41,7 +41,7 @@ const TaskOne = ({ classes, flight }: TaskOneProps) => {
 			data: {
 				flight: flight,
 				tabParams: {
-					date: "04.03.2019",
+					date: "01.02.2018",
 					class: classes[0].title,
 					type: 0,
 				},

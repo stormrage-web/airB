@@ -73,50 +73,56 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 					/>
 				</div>
 			</div>
-			<ResponsiveContainer width="100%" height={300}>
-				<AreaChart data={(tabInfo as TabOneData).data}>
-					<XAxis dataKey="x" stroke="#4082F4" />
-					<YAxis dataKey="y" />
-					{((tabInfo as TabOneData)?.seasons || []).map((season) => (
-						<>
-							<ReferenceArea
-								key={season.name}
-								x1={season.left}
-								x2={season.right}
-								y1={0}
-								y2={Math.random() * mx}
-								fill={"#" + Math.floor(
-									Math.random() * 16777215
-								).toString(16)}
-								fillOpacity={0.3}
-								label={season.name}
-							/>
-              asd
-						</>
-					))}
-					<Tooltip />
-					<Area
-						type="monotone"
-						dataKey="y"
-						stroke="#4082F4"
-						fill="#4082F4"
-						fillOpacity={0.5}
-						activeDot={{ r: 8 }}
-					/>
-					<Brush dataKey="date" height={40} stroke="#4082F4">
-						<AreaChart data={(tabInfo as TabOneData).data}>
-							<Area
-								type="monotone"
-								dataKey="y"
-								fill="#CADFF5"
-								fillOpacity={1}
-								strokeOpacity={0}
-								activeDot={{ r: 8 }}
-							/>
-						</AreaChart>
-					</Brush>
-				</AreaChart>
-			</ResponsiveContainer>
+			{!(tabInfo as TabOneData)?.seasons?.length ? (
+				<div className={styles.noData}>
+          Нет данных для рейса с заданными параметрами
+				</div>
+			) : (
+				<ResponsiveContainer width="100%" height={300}>
+					<AreaChart data={(tabInfo as TabOneData).data}>
+						<XAxis dataKey="x" stroke="#4082F4" />
+						<YAxis dataKey="y" />
+						{((tabInfo as TabOneData)?.seasons || []).map((season) => (
+							<>
+								<ReferenceArea
+									key={season.name}
+									x1={season.left}
+									x2={season.right}
+									y1={0}
+									y2={(Math.random() * (1.1 - 0.3) + 0.3) * mx}
+									fill={"#" + Math.floor(
+										Math.random() * 16777215
+									).toString(16)}
+									fillOpacity={0.3}
+									label={season.name}
+								/>
+                asd
+							</>
+						))}
+						<Tooltip />
+						<Area
+							type="monotone"
+							dataKey="y"
+							stroke="#4082F4"
+							fill="#4082F4"
+							fillOpacity={0.5}
+							activeDot={{ r: 8 }}
+						/>
+						<Brush dataKey="date" height={40} stroke="#4082F4">
+							<AreaChart data={(tabInfo as TabOneData).data}>
+								<Area
+									type="monotone"
+									dataKey="y"
+									fill="#CADFF5"
+									fillOpacity={1}
+									strokeOpacity={0}
+									activeDot={{ r: 8 }}
+								/>
+							</AreaChart>
+						</Brush>
+					</AreaChart>
+				</ResponsiveContainer>
+			)}
 		</div>
 	);
 };
