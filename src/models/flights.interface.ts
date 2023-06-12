@@ -1,3 +1,5 @@
+import { Option } from "../widgets/CustomSelect/CustomOption/CustomOption";
+
 export interface DateRange {
   left: string;
   right: string;
@@ -45,3 +47,22 @@ export interface FlightState {
   tabInfo: Coordinates[] | TabOneData | TabThreeItem[] | TabFourData;
   isLoading: boolean;
 }
+
+export const optionsList: Option[] = [
+	{
+		value: "0",
+		title: "AER  - SVO ",
+	},
+	{
+		value: "1",
+		title: "SVO  - ASF ",
+	},
+	{
+		value: "3",
+		title: "SVO  - AER ",
+	},
+	{
+		value: "4",
+		title: "ASF  - SVO ",
+	},
+];
