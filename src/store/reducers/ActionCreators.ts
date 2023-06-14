@@ -7,6 +7,8 @@ import {
 	TabOneData,
 	TabParams,
 } from "../../models/flights.interface";
+import { taskOneData } from "../../shared/mocks/taskOne.data";
+import { taskTwoData } from "../../shared/mocks/taskTwo.data";
 
 export const mainEndPoint = "http://51.250.91.130:5000/";
 
@@ -95,7 +97,35 @@ export const fetchFlight =
 						}),
 					);
 			} catch (e) {
-				console.log(e);
+				const responseSeasons: any = taskTwoData;
+				const iteratedSeasons = [];
+
+				switch (tab) {
+					case 1:
+						dispatch(
+							flightSlice.actions.flightFetchingSuccess({
+								flight: data.flight,
+								tabInfo: taskOneData,
+								tabParams: data.tabParams,
+							}));
+							break;
+					case 2:
+						for (const key of Object.keys(responseSeasons)) {
+							iteratedSeasons.push({
+								name: key,
+								left: responseSeasons[key]?.left,
+								right: responseSeasons[key]?.right,
+							});
+						}
+						dispatch(
+							flightSlice.actions.flightFetchingSuccess({
+								flight: data.flight,
+								tabInfo: { ...responseSeasons, seasons: iteratedSeasons },
+								tabParams: data.tabParams,
+							}),
+						);
+						break;
+				}
 			}
 		};
 
