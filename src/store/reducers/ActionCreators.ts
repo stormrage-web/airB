@@ -70,9 +70,9 @@ export const fetchFlight =
 					start_date +
 					prediction_depth +
 					profiles_param,
-				);
+				).catch((e) => console.log(e));
 				if (tab == 2) {
-					const responseSeasons = response.data.seasons;
+					const responseSeasons = response?.data?.seasons;
 					const iteratedSeasons = [];
 					for (const key of Object.keys(responseSeasons)) {
 						iteratedSeasons.push({
@@ -84,7 +84,7 @@ export const fetchFlight =
 					dispatch(
 						flightSlice.actions.flightFetchingSuccess({
 							flight: data.flight,
-							tabInfo: { ...response.data, seasons: iteratedSeasons },
+							tabInfo: { ...response?.data, seasons: iteratedSeasons },
 							tabParams: data.tabParams,
 						}),
 					);
@@ -92,7 +92,7 @@ export const fetchFlight =
 					dispatch(
 						flightSlice.actions.flightFetchingSuccess({
 							flight: data.flight,
-							tabInfo: response.data,
+							tabInfo: response?.data,
 							tabParams: data.tabParams,
 						}),
 					);

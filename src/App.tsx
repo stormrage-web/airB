@@ -13,7 +13,7 @@ const App = () => {
 	useEffect(() => {
 		axios.get<Flight[]>("http://51.250.91.130:5000/all_flights_data").then((response) => {
 			setFlights(response.data);
-		});
+		}).catch((e) => console.log(e));
 	}, []);
 
 	return (
