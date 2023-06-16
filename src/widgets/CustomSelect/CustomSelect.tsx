@@ -47,7 +47,7 @@ export const CustomSelect = (props: CustomSelectProps) => {
 			ref={rootRef}
 			data-is-active={isOpen}
 		>
-			<div className={styles.arrow}>
+			<div className={styles.arrow} onClick={handlePlaceHolderClick}>
 				<ArrowDown />
 			</div>
 			<div
