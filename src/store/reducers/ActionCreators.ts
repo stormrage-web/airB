@@ -1,141 +1,71 @@
 import { AppDispatch } from "../store";
-import axios from "axios";
 import { flightSlice } from "./FlightSlice";
 import {
-	Coordinates,
-	FlightState,
-	TabOneData,
-	TabParams,
+  FlightState,
+  TabParams
 } from "../../models/flights.interface";
 import { taskOneData } from "../../shared/mocks/taskOne.data";
 import { taskTwoData } from "../../shared/mocks/taskTwo.data";
+import { taskThreeData } from "../../shared/mocks/taskThree.data";
+import { taskFourData } from "../../shared/mocks/TaskFour.data";
 
-export const mainEndPoint = "http://51.250.91.130:5000/";
+// export const mainEndPoint = "http://51.250.91.130:5000/";
 
 export const fetchFlight =
-	({ tab, data }: { tab: number; data: Partial<FlightState> }) =>
-		async (dispatch: AppDispatch) => {
-			try {
-				dispatch(flightSlice.actions.flightFetching);
-				const flight_id_param = "?flight_id_param=" + data.flight;
-				const flight_date_param = data.tabParams?.date
-					? "&flight_date_param=" + data.tabParams?.date
-					: "";
-				const booking_class_param = data.tabParams?.class
-					? "&booking_class_param=" + data.tabParams?.class
-					: "";
-				const start_date = data.tabParams?.start_date
-					? "&start_date=" + data.tabParams?.start_date
-					: "";
-				const prediction_depth = data.tabParams?.prediction_depth
-					? "&prediction_depth=" + data.tabParams?.prediction_depth
-					: "";
-				const profiles_param = data.tabParams?.profiles?.length
-					? "&profile_types=" + data.tabParams.profiles
-						.map((profile, index) => {
-							let profileName = "";
-							switch (index) {
-							case 0:
-								profileName = "Отдых";
-								break;
-							case 1:
-								profileName = "Бизнес/командировки";
-								break;
-							case 2:
-								profileName = "Спонтанное";
-								break;
-							case 3:
-								profileName = "Заранее запланированное";
-								break;
-							}
-							return profile
-								? profileName
-								: "";
-						}).filter((item) => item?.length).join(",")
-					: "";
-				const plot_type_param =
-				tab === 2
-					? "&plot_type_param=season_spros"
-					: data.tabParams?.type === 0
-						? "&plot_type_param=dynamic"
-						: "";
-				const response = await axios.get<Coordinates[] | TabOneData | any>(
-					mainEndPoint +
-					"flight_task_" +
-					tab +
-					flight_id_param +
-					flight_date_param +
-					booking_class_param +
-					plot_type_param +
-					start_date +
-					prediction_depth +
-					profiles_param,
-				).catch((e) => console.log(e));
-				if (tab == 2) {
-					const responseSeasons = response?.data?.seasons;
-					const iteratedSeasons = [];
-					for (const key of Object.keys(responseSeasons)) {
-						iteratedSeasons.push({
-							name: key,
-							left: responseSeasons[key]?.left,
-							right: responseSeasons[key]?.right,
-						});
-					}
-					dispatch(
-						flightSlice.actions.flightFetchingSuccess({
-							flight: data.flight,
-							tabInfo: { ...response?.data, seasons: iteratedSeasons },
-							tabParams: data.tabParams,
-						}),
-					);
-				} else
-					dispatch(
-						flightSlice.actions.flightFetchingSuccess({
-							flight: data.flight,
-							tabInfo: response?.data,
-							tabParams: data.tabParams,
-						}),
-					);
-			} catch (e) {
-				const responseSeasons: any = taskTwoData;
-				const iteratedSeasons = [];
-
-				switch (tab) {
-					case 1:
-						dispatch(
-							flightSlice.actions.flightFetchingSuccess({
-								flight: data.flight,
-								tabInfo: taskOneData,
-								tabParams: data.tabParams,
-							}));
-							break;
-					case 2:
-						for (const key of Object.keys(responseSeasons)) {
-							iteratedSeasons.push({
-								name: key,
-								left: responseSeasons[key]?.left,
-								right: responseSeasons[key]?.right,
-							});
-						}
-						dispatch(
-							flightSlice.actions.flightFetchingSuccess({
-								flight: data.flight,
-								tabInfo: { ...responseSeasons, seasons: iteratedSeasons },
-								tabParams: data.tabParams,
-							}),
-						);
-						break;
-				}
-			}
-		};
+  ({ tab, data }: { tab: number; data: Partial<FlightState> }) =>
+    async (dispatch: AppDispatch) => {
+      dispatch(flightSlice.actions.flightFetching);
+      if (tab === 1) {
+        dispatch(
+          flightSlice.actions.flightFetchingSuccess({
+            flight: data.flight,
+            tabInfo: taskOneData,
+            tabParams: data.tabParams
+          })
+        );
+      } else if (tab === 2) {
+        const responseSeasons: any = taskTwoData.seasons;
+        const iteratedSeasons = [];
+        for (const key of Object.keys(responseSeasons)) {
+          iteratedSeasons.push({
+            name: key,
+            left: responseSeasons[key]?.left,
+            right: responseSeasons[key]?.right
+          });
+        }
+        dispatch(
+          flightSlice.actions.flightFetchingSuccess({
+            flight: data.flight,
+            tabInfo: { data: taskTwoData.data, seasons: iteratedSeasons },
+            tabParams: data.tabParams
+          })
+        );
+      } else if (tab === 3) {
+        dispatch(
+          flightSlice.actions.flightFetchingSuccess({
+            flight: data.flight,
+            tabInfo: taskThreeData,
+            tabParams: data.tabParams
+          })
+        );
+      } else if (tab === 4) {
+        dispatch(
+          flightSlice.actions.flightFetchingSuccess({
+            flight: data.flight,
+            tabInfo: taskFourData,
+            tabParams: data.tabParams
+          })
+        );
+      }
+    };
 
 export const setParams =
-	({ flight, params }: { flight?: string; params?: TabParams }) =>
-		async (dispatch: AppDispatch) => {
-			dispatch(
-				flightSlice.actions.flightFetchingSuccess({
-					flight: flight,
-					tabParams: { ...params },
-				}),
-			);
-		};
+  ({ flight, params }: { flight?: string; params?: TabParams }) =>
+    async (dispatch: AppDispatch) => {
+      dispatch(
+        flightSlice.actions.flightFetchingSuccess({
+          flight: flight,
+          tabParams: { ...params }
+        })
+      );
+    };

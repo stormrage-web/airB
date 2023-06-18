@@ -39,6 +39,7 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 				tabParams: { class: classes[0].title, type: 0 }
 			}
 		});
+		console.log((tabInfo as TabOneData).data);
 	}, []);
 
 	return (
@@ -96,7 +97,6 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 									fillOpacity={0.3}
 									label={season.name}
 								/>
-                asd
 							</>
 						))}
 						<Tooltip />
