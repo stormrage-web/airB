@@ -15,6 +15,7 @@ import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption"
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
 import { TabOneData } from "../../../models/flights.interface";
 import { useTaskTwoLogic } from "./TaskTwo.logic";
+import Skeleton from "react-loading-skeleton";
 
 interface TaskTwoProps {
   classes: Option[];
@@ -76,10 +77,10 @@ const TaskTwo = ({ classes, flight }: TaskTwoProps) => {
 			</div>
 			{!(tabInfo as TabOneData)?.seasons?.length ? (
 				<div className={styles.noData}>
-          Нет данных для рейса с заданными параметрами
+					<Skeleton height="100%" enableAnimation />
 				</div>
 			) : (
-				<ResponsiveContainer width="100%" height={300}>
+				<ResponsiveContainer width="100%" height={400}>
 					<AreaChart data={(tabInfo as TabOneData).data}>
 						<XAxis dataKey="x" stroke="#4082F4" />
 						<YAxis dataKey="y" />

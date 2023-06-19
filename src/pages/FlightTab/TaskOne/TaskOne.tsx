@@ -17,6 +17,7 @@ import {
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import ToggleSwitch from "../../../widgets/ToggleSwitch/ToggleSwitch";
 import { useTaskOneLogic } from "./TaskOne.logic";
+import Skeleton from "react-loading-skeleton";
 
 interface TaskOneProps {
   flight: string;
@@ -96,10 +97,10 @@ const TaskOne = ({ flight, classes }: TaskOneProps) => {
         </div>
         {!(tabInfo as any[]).length ? (
           <div className={styles.noData}>
-            Нет данных для рейса с заданными параметрами
+              <Skeleton height="100%" enableAnimation />
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={400}>
             <BarChart data={(tabInfo as any[]) || []}>
               <XAxis dataKey="x" stroke="#4082F4" />
               <YAxis />
