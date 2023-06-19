@@ -6,11 +6,13 @@
     position: absolute;
     top: 6px;
     right: 0;
-    z-index: 10;
+    z-index: 1;
     padding: 0 14px 0 0;
     content: "";
     height: 32px;
     width: 32px;
+    cursor: pointer;
+    pointer-events: none;
     background: url("../../shared/images/calendar.svg") no-repeat;
   }
 }
