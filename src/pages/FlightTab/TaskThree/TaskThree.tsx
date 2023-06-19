@@ -15,6 +15,7 @@ import {
 import { Option } from "../../../widgets/CustomSelect/CustomOption/CustomOption";
 import CustomCheckbox from "../../../widgets/CustomCheckbox/CustomCheckbox";
 import { useTaskThreeLogic } from "./TaskThree.logic";
+import Skeleton from "react-loading-skeleton";
 
 interface TaskThreeProps {
 	classes: Option[];
@@ -111,19 +112,19 @@ const TaskThree = ({ classes, flight }: TaskThreeProps) => {
 			</div>
 			{!(graph || []).length ? (
 				<div className={styles.noData}>
-					Нет данных для рейса с заданными параметрами
+					<Skeleton height="100%" enableAnimation />
 				</div>
 			) : (
-				<ResponsiveContainer width="100%" height={300}>
+				<ResponsiveContainer width="100%" height={400}>
 					<LineChart data={graph}>
 						<XAxis dataKey="date" stroke="#4082F4" />
 						<YAxis dataKey={maxTitle.title} max={maxTitle.value} />
 						<Tooltip />
-						{profileParams.map((profile) => (
+						{profileParams.map((profile, index) => (
 							<Line
 								key={profile.dataKey}
 								type="monotone"
-								dataKey={profile.dataKey}
+								dataKey={tabParams?.profiles && tabParams?.profiles[index] ? profile.dataKey : undefined}
 								stroke={profile.color}
 								activeDot={{ r: 5 }}
 								dot={{ r: 0 }}
